@@ -10,6 +10,7 @@ mov es, ax
 mov sp, 0x7BFF
 sti
 
+call activate
 
 mov si, 0
 
@@ -22,6 +23,20 @@ print:
     jne print
 
 jmp $
+
+activate:
+    mov ax, 0x2401
+    int 0x15
+    jc .fail
+    ret
+
+
+.fail:
+    cli
+
+.hang:
+    hlt
+    jmp .hang
 
 Hello:
     db "Royce's 2nd Bootloader", 0
