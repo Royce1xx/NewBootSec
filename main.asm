@@ -27,6 +27,23 @@ print:
 
 jmp $
 
+
+mov ax, 0x1000
+mov es, ax
+xor bx, bx
+
+mov ah, 0x02       ;Bios read sector to read in the kernel
+mov al, 0x01
+mov ch, 0x00       ; cylinder
+mov cl, 0x02       ; sector (start at sector 2)
+mov dh, 0x00       ; head
+mov dl, 0x00       ; drive
+int 0x13           ; This reads the data from the disk
+
+jc .disk_error
+jmp 0x1000:0000    ; This jumps back to the kernel
+
+
 ; This enables the A_20 so we can get into protected mode
 activate:
     mov ax, 0x2401
@@ -42,6 +59,17 @@ activate:
 .hang:
     hlt
     jmp .hang
+
+.disk_error:
+    cli         ; Stop the interrupts
+
+
+
+
+.disk_hang:
+    hlt             ;Stops the cpu 
+    jmp .disk_hang
+
 
 ; welcome to the bootloader
 Hello:
