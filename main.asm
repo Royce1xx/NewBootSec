@@ -1,4 +1,4 @@
-16 bits
+bits 16
 org 0x7c00
 
 ; Setup segments and stack 
@@ -14,19 +14,19 @@ sti
 call activate 
 
 ; print boot message
-mov si, 0
+mov si, Hello
 
 ; prints hello to the screen
 print:
     mov ah, 0x0e
-    mov al, [Hello + si] ; rand
+    mov al, [si] 
     int 0x10
     add si, 1
-    cmp [Hello + si], 0
+    cmp byte [si], 0
     jne print
 
-jmp $
-
+; Added label to continue after print loop
+after_print:
 
 mov ax, 0x1000
 mov es, ax
@@ -62,9 +62,7 @@ activate:
 
 .disk_error:
     cli         ; Stop the interrupts
-
-
-
+    jmp .disk_hang
 
 .disk_hang:
     hlt             ;Stops the cpu 
