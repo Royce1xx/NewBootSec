@@ -19,7 +19,7 @@ mov si, 0
 ; prints hello to the screen
 print:
     mov ah, 0x0e
-    mov al, [Hello + si]
+    mov al, [Hello + si] ; rand
     int 0x10
     add si, 1
     cmp [Hello + si], 0
